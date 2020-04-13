@@ -1,13 +1,11 @@
 package controllers
 
-import javax.inject._
 import akka.actor.ActorSystem
-import akka.util.ByteString
+import javax.inject._
 import play.api.mvc._
 import services.MyService
 
-import scala.concurrent.duration._
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.ExecutionContext
 
 /**
  * This controller creates an `Action` that demonstrates how to write
@@ -25,56 +23,13 @@ import scala.concurrent.{ExecutionContext, Future, Promise}
  * a blocking API.
  */
 @Singleton
-class AsyncController @Inject()(
-    cc: ControllerComponents,
-    actorSystem: ActorSystem,
-    myService: MyService
-)(implicit exec: ExecutionContext)
+class AsyncController @Inject()(cc: ControllerComponents, actorSystem: ActorSystem, myService: MyService)(implicit exec: ExecutionContext)
     extends AbstractController(cc) {
-
-  /**
-   * Creates an Action that returns a plain text message after a delay
-   * of 1 second.
-   *
-   * The configuration in the `routes` file means that this method
-   * will be called when the application receives a `GET` request with
-   * a path of `/message`.
-   */
-  def message2 = Action.async {
-    getFutureMessage(1.second).map { msg =>
-      Ok(msg)
-    }
-  }
-
-  import MyZio._
+  import libs.PlayZio._
   def message = Action.z { request =>
-//    request.body.asRaw.map { buffer =>
-//      buffer.asBytes(999999).toArray[Byte]
-//    }
     myService.print()
 
     import zio._
     Task.effectTotal("Hi222").map(msg => Ok(msg))
-  }
-
-  private def getFutureMessage(delayTime: FiniteDuration): Future[String] = {
-    val promise: Promise[String] = Promise[String]()
-    actorSystem.scheduler.scheduleOnce(delayTime) {
-      promise.success("Hi!")
-    }(actorSystem.dispatcher) // run scheduled tasks using the actor system's dispatcher
-    promise.future
-  }
-
-}
-
-object MyZio {
-  implicit class ActionBuilderOps[+R[_], B](
-      actionBuilder: ActionBuilder[R, B]
-  ) {
-    def z(zioAction: R[B] => zio.Task[Result]): Action[B] =
-      actionBuilder.async { request =>
-        val task = zioAction(request)
-        zio.Runtime.default.unsafeRunToFuture(task)
-      }
   }
 }

@@ -12,7 +12,5 @@ object MyObj extends MyService {
 
 @Singleton
 class MyServiceImpl extends MyService {
-  println("=============== created")
-  override def print(): Unit =
-    println("Hi my Sir")
+  override def print(): Unit = println("Hi my proj")
 }
