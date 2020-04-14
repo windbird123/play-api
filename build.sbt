@@ -4,14 +4,26 @@ organization in ThisBuild := "com.github.windbird123"
 scalaVersion in ThisBuild := "2.12.10"
 
 // PROJECTS
-lazy val global = project
+lazy val root = project
   .in(file("."))
   .enablePlugins(PlayScala)
   .settings(
     settings,
     libraryDependencies ++= commonDependencies ++ Seq(
       guice,
-      dependencies.scalatestplus % "Test"
+      dependencies.scalatestplus % Test
+    )
+  )
+
+lazy val gatling = project
+  .enablePlugins(GatlingPlugin)
+  .settings(
+    name := "gatling",
+    settings,
+    scalacOptions ++= Seq("-language:implicitConversions", "-language:postfixOps"),
+    libraryDependencies ++= Seq(
+      dependencies.gatlingCharts % Test,
+      dependencies.gatlingTest   % Test
     )
   )
 
@@ -26,6 +38,7 @@ lazy val dependencies =
     val scalajHttpV     = "2.4.2"
     val zioV            = "1.0.0-RC18-2"
     val scalatestV      = "3.0.5"
+    val gatlingV        = "3.3.1"
 
     // common dependencies
     val logback        = "ch.qos.logback"             % "logback-classic" % logbackV
@@ -39,8 +52,10 @@ lazy val dependencies =
     val scalatest      = "org.scalatest"              %% "scalatest"      % scalatestV
 
     // project specific dependencies
-    val scalatestplus = "org.scalatestplus.play" %% "scalatestplus-play" % scalatestplusV
-    val scalajHttp    = "org.scalaj"             %% "scalaj-http"        % scalajHttpV
+    val scalatestplus = "org.scalatestplus.play" %% "scalatestplus-play"       % scalatestplusV
+    val scalajHttp    = "org.scalaj"             %% "scalaj-http"              % scalajHttpV
+    val gatlingCharts = "io.gatling.highcharts"  % "gatling-charts-highcharts" % gatlingV
+    val gatlingTest   = "io.gatling"             % "gatling-test-framework"    % gatlingV
   }
 
 lazy val commonDependencies = Seq(
@@ -61,6 +76,7 @@ lazy val settings = commonSettings ++ scalafmtSettings
 lazy val compilerOptions = Seq(
   "-encoding",
   "UTF-8", // source files are in UTF-8
+  "-target:jvm-1.8",
   "-deprecation", // warn about use of deprecated APIs
   "-unchecked", // warn about unchecked type parameters
   "-feature", // warn about misused language features
@@ -100,4 +116,4 @@ lazy val assemblySettings = Seq(
 addCompilerPlugin("org.spire-math"  %% "kind-projector" % "0.9.3")
 addCompilerPlugin("org.scalamacros" % "paradise"        % "2.1.0" cross CrossVersion.full)
 
-testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
+//testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
