@@ -1,18 +1,25 @@
 package services
 
-import javax.inject.{ Inject, Singleton }
-import play.api.{ Configuration, Logging }
+import javax.inject.{Inject, Singleton}
+import libs.MarkerLogging
+import org.slf4j.MarkerFactory
+import play.api.mvc.RequestHeader
+import play.api.{Configuration, Logging, MarkerContext}
 
 trait MyService {
-  def print(): Unit
+//  implicit val request: RequestHeader
+  def print()(implicit request: RequestHeader): Unit
 }
 
 object MyObj extends MyService {
-  override def print(): Unit = println("MY obj inst")
+  override def print()(implicit request: RequestHeader): Unit = println("MY obj inst")
 }
 
 @Singleton
-class MyServiceImpl @Inject() (config: Configuration) extends MyService with Logging {
-  override def print(): Unit =
+class MyServiceImpl @Inject() (config: Configuration) extends MyService with MarkerLogging {
+
+  // 주의: marker logging 을 위해 implicit request: RequestHeader 이 있어야 한다..
+  override def print()(implicit request: RequestHeader): Unit = {
     logger.info("Hi my proj: " + config.get[String]("service.name"))
+  }
 }

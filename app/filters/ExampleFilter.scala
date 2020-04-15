@@ -1,7 +1,7 @@
 package filters
 
 import javax.inject._
-import play.api.Logging
+import libs.MarkerLogging
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
@@ -15,14 +15,12 @@ import scala.concurrent.ExecutionContext
  * It is used below by the `map` method.
  */
 @Singleton
-class ExampleFilter @Inject() (implicit ec: ExecutionContext) extends EssentialFilter with Logging {
-
-  override def apply(next: EssentialAction) = EssentialAction { request =>
-    logger.info("Before 111111111")
+class ExampleFilter @Inject() (implicit ec: ExecutionContext) extends EssentialFilter with MarkerLogging {
+  override def apply(next: EssentialAction) = EssentialAction { implicit request =>
+    logger.info("Before Filter")
     next(request).map { result =>
-      println("lenBody: " + result.body.contentLength)
       val out = result.withHeaders("X-ExampleFilter" -> "foo")
-      println("After 222")
+      logger.info("After 222")
       out
     }
   }
