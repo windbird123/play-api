@@ -7,10 +7,9 @@ import play.api.mvc.RequestHeader
 import play.api.{Logging, MarkerContext}
 
 trait MarkerLogging extends Logging {
-  implicit def requestHeaderToMarkerContext(implicit request: RequestHeader): MarkerContext = {
-    val marker = MarkerFactory.getMarker(MarkerLogging.serverStartId + "-" + request.id)
-    MarkerContext(marker)
-  }
+  // converted Marker to MarkerContext by implicit
+  implicit def requestHeaderToMarkerContext(implicit request: RequestHeader): MarkerContext =
+    MarkerFactory.getMarker(MarkerLogging.serverStartId + "-" + request.id)
 }
 
 object MarkerLogging extends MarkerLogging {

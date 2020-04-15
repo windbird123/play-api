@@ -2,24 +2,17 @@ package services
 
 import javax.inject.{Inject, Singleton}
 import libs.MarkerLogging
-import org.slf4j.MarkerFactory
-import play.api.mvc.RequestHeader
-import play.api.{Configuration, Logging, MarkerContext}
+import play.api.{Configuration, MarkerContext}
 
 trait MyService {
-//  implicit val request: RequestHeader
-  def print()(implicit request: RequestHeader): Unit
+  def print()(implicit mc: MarkerContext): Unit
 }
 
-object MyObj extends MyService {
-  override def print()(implicit request: RequestHeader): Unit = println("MY obj inst")
-}
-
+// impl
 @Singleton
 class MyServiceImpl @Inject() (config: Configuration) extends MyService with MarkerLogging {
-
-  // 주의: marker logging 을 위해 implicit request: RequestHeader 이 있어야 한다..
-  override def print()(implicit request: RequestHeader): Unit = {
+  // 주의: marker logging 을 위해 implicit request: RequestHeader 가 scope 안에 이 있어야
+  // MarkerLogging.requestHeaderToMarkerContext 에 의해 MarkerContext 로 변환될 수 있다.
+  override def print()(implicit mc: MarkerContext): Unit =
     logger.info("Hi my proj: " + config.get[String]("service.name"))
-  }
 }
