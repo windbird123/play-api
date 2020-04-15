@@ -72,8 +72,8 @@ lazy val commonDependencies = Seq(
 // SETTINGS
 lazy val compilerOptions = Seq(
   "-encoding",
-  "UTF-8", // source files are in UTF-8
-  "-target:jvm-1.8",
+  "UTF-8",                 // source files are in UTF-8
+  "-target:jvm-1.8",       // jvm-1.8
   "-deprecation",          // warn about use of deprecated APIs
   "-unchecked",            // warn about unchecked type parameters
   "-feature",              // warn about misused language features

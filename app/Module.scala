@@ -26,7 +26,8 @@ class Module extends AbstractModule {
     // Set AtomicCounter as the implementation for Counter.
     bind(classOf[Counter]).to(classOf[AtomicCounter])
 
-    bind(classOf[MyService]).toInstance(MyObj)
+    bind(classOf[MyService]).to(classOf[MyServiceImpl])
+//    bind(classOf[MyService]).toInstance(MyObj)
   }
 
 }
