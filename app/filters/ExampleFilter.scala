@@ -1,7 +1,7 @@
 package filters
 
-import com.typesafe.scalalogging.LazyLogging
 import javax.inject._
+import play.api.Logging
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
@@ -15,7 +15,7 @@ import scala.concurrent.ExecutionContext
  * It is used below by the `map` method.
  */
 @Singleton
-class ExampleFilter @Inject()(implicit ec: ExecutionContext) extends EssentialFilter with LazyLogging {
+class ExampleFilter @Inject() (implicit ec: ExecutionContext) extends EssentialFilter with Logging {
 
   override def apply(next: EssentialAction) = EssentialAction { request =>
     logger.info("Before 111111111")

@@ -8,7 +8,7 @@ lazy val root = project
   .in(file("."))
   .enablePlugins(PlayScala)
   .settings(
-    settings,
+    commonSettings,
     libraryDependencies ++= commonDependencies ++ Seq(
       guice,
       dependencies.scalatestplus % Test
@@ -19,7 +19,7 @@ lazy val gatling = project
   .enablePlugins(GatlingPlugin)
   .settings(
     name := "gatling",
-    settings,
+    commonSettings,
     scalacOptions ++= Seq("-language:implicitConversions", "-language:postfixOps"),
     libraryDependencies ++= Seq(
       dependencies.gatlingCharts % Test,
@@ -60,7 +60,6 @@ lazy val dependencies =
 
 lazy val commonDependencies = Seq(
   dependencies.logback,
-  dependencies.scalaLogging,
   dependencies.slf4j,
   dependencies.typesafeConfig,
   dependencies.zio,
@@ -71,17 +70,15 @@ lazy val commonDependencies = Seq(
 )
 
 // SETTINGS
-lazy val settings = commonSettings ++ scalafmtSettings
-
 lazy val compilerOptions = Seq(
   "-encoding",
   "UTF-8", // source files are in UTF-8
   "-target:jvm-1.8",
-  "-deprecation", // warn about use of deprecated APIs
-  "-unchecked", // warn about unchecked type parameters
-  "-feature", // warn about misused language features
+  "-deprecation",          // warn about use of deprecated APIs
+  "-unchecked",            // warn about unchecked type parameters
+  "-feature",              // warn about misused language features
   "-language:higherKinds", // allow higher kinded types without `import scala.language.higherKinds`
-  "-Xfatal-warnings", // turn compiler warnings into errors
+  "-Xfatal-warnings",      // turn compiler warnings into errors
   "-Ypartial-unification", // allow the compiler to unify type constructors of different arities
   "-language:implicitConversions"
 )
@@ -94,13 +91,6 @@ lazy val commonSettings = Seq(
     Resolver.sonatypeRepo("snapshots")
   )
 )
-
-lazy val scalafmtSettings =
-  Seq(
-    scalafmtOnCompile := true,
-    scalafmtTestOnCompile := true,
-    scalafmtVersion := "1.2.0"
-  )
 
 lazy val assemblySettings = Seq(
   assemblyJarName in assembly := name.value + ".jar",

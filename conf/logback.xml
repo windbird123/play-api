@@ -6,13 +6,13 @@
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <file>${application.home:-.}/logs/application.log</file>
     <encoder>
-      <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS}\t[%thread]\t%-5level\t\(%file:%line\)\t%X{idRequest}\t%msg%n</pattern>
+      <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS}\t[%thread]\t%level\t%marker\t%msg%n</pattern>
     </encoder>
   </appender>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS}\t[%thread]\t%-5level\t\(%file:%line\)\t%X{idRequest}\t%msg%n</pattern>
+      <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS}\t[%thread]\t%level\t%marker\t%msg%n</pattern>
     </encoder>
   </appender>
 

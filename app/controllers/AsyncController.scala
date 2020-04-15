@@ -2,6 +2,8 @@ package controllers
 
 import akka.actor.ActorSystem
 import javax.inject._
+import org.slf4j.{ MDC, MarkerFactory }
+import play.api.{ Logging, MarkerContext }
 import play.api.mvc._
 import services.MyService
 
@@ -23,13 +25,22 @@ import scala.concurrent.ExecutionContext
  * a blocking API.
  */
 @Singleton
-class AsyncController @Inject()(cc: ControllerComponents, actorSystem: ActorSystem, myService: MyService)(implicit exec: ExecutionContext)
-    extends AbstractController(cc) {
+class AsyncController @Inject() (cc: ControllerComponents, actorSystem: ActorSystem, myService: MyService)(
+  implicit exec: ExecutionContext
+) extends AbstractController(cc)
+    with Logging {
+
   import libs.PlayZio._
-  def message = Action.z { request =>
+
+  // implicit request 로 해야 PlayZio.requestHeaderToMarkerContext 가 적용되어 log 에 UUID 가 기록된다.
+  def message = Action.z { implicit request =>
+    logger.info("TEST logging with marker")
     myService.print()
 
     import zio._
-    Task.effectTotal("Hi222").map(msg => Ok(msg))
+    Task.effectTotal {
+      logger.info("log in zio task")
+      "Hi222"
+    }.map(msg => Ok(msg))
   }
 }

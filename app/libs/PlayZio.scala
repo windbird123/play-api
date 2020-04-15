@@ -1,6 +1,10 @@
 package libs
 
-import play.api.mvc.{Action, ActionBuilder, BodyParser, Result}
+import java.util.UUID
+
+import org.slf4j.MarkerFactory
+import play.api.MarkerContext
+import play.api.mvc._
 
 object PlayZio {
   implicit class ActionBuilderOps[+R[_], B](actionBuilder: ActionBuilder[R, B]) {
@@ -14,4 +18,8 @@ object PlayZio {
       zio.Runtime.default.unsafeRunToFuture(task)
     }
   }
+
+  val serverStartId: String = UUID.randomUUID().toString.replace("-", "").substring(0, 8)
+  implicit def requestHeaderToMarkerContext(implicit request: RequestHeader): MarkerContext =
+    MarkerFactory.getMarker(serverStartId + "-" + request.id)
 }
