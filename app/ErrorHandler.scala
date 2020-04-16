@@ -1,12 +1,12 @@
 import javax.inject.{Inject, Provider, Singleton}
-import libs.MarkerLogging
+import libs.playzio._
+import play.api._
 import play.api.http.DefaultHttpErrorHandler
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.routing.Router
-import play.api.{Configuration, Environment, MarkerContext, OptionalSourceMapper, UsefulException}
 
 import scala.concurrent._
 
@@ -24,10 +24,10 @@ class ErrorHandler @Inject() (
   sourceMapper: OptionalSourceMapper,
   router: Provider[Router]
 ) extends DefaultHttpErrorHandler(env, config, sourceMapper, router)
-    with MarkerLogging {
+    with Logging {
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
-    implicit val markerContext: MarkerContext = requestHeaderToMarkerContext(request)
+    implicit val mc: MarkerContext = request.toMarkerContext
 
     logger.info(s"onClientError: statusCode = $statusCode, uri = ${request.uri}, message = $message")
 
@@ -51,17 +51,17 @@ class ErrorHandler @Inject() (
   }
 
   override def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = {
-    implicit val markerContext: MarkerContext = requestHeaderToMarkerContext(request)
+    implicit val mc: MarkerContext = request.toMarkerContext
     super.onServerError(request, exception)
   }
 
   override protected def onDevServerError(request: RequestHeader, exception: UsefulException): Future[Result] = {
-    implicit val markerContext: MarkerContext = requestHeaderToMarkerContext(request)
+    implicit val mc: MarkerContext = request.toMarkerContext
     Future.successful(InternalServerError(Json.obj("exception" -> exception.toString)))
   }
 
   override protected def onProdServerError(request: RequestHeader, exception: UsefulException): Future[Result] = {
-    implicit val markerContext: MarkerContext = requestHeaderToMarkerContext(request)
+    implicit val mc: MarkerContext = request.toMarkerContext
     Future.successful(InternalServerError)
   }
 }

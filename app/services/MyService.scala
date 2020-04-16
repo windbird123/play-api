@@ -1,18 +1,19 @@
 package services
 
 import javax.inject.{Inject, Singleton}
-import libs.MarkerLogging
-import play.api.{Configuration, MarkerContext}
+import play.api.{Configuration, Logging, MarkerContext}
+import zio.{Has, RIO, ZIO}
 
 trait MyService {
-  def print()(implicit mc: MarkerContext): Unit
+  def print(): RIO[Has[MarkerContext], Unit]
 }
 
 // impl
 @Singleton
-class MyServiceImpl @Inject() (config: Configuration) extends MyService with MarkerLogging {
-  // 주의: marker logging 을 위해 implicit request: RequestHeader 가 scope 안에 이 있어야
-  // MarkerLogging.requestHeaderToMarkerContext 에 의해 MarkerContext 로 변환될 수 있다.
-  override def print()(implicit mc: MarkerContext): Unit =
-    logger.info("Hi my proj: " + config.get[String]("service.name"))
+class MyServiceImpl @Inject() (config: Configuration) extends MyService with Logging {
+  override def print(): RIO[Has[MarkerContext], Unit] = ZIO.access { implicit env =>
+  // marker logging 울 위해 필요함
+  import libs.playzio._
+    logger.info("Hi my serviceImpl: " + config.get[String]("service.name"))
+  }
 }
