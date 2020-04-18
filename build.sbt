@@ -30,32 +30,22 @@ lazy val gatling = project
 // DEPENDENCIES
 lazy val dependencies =
   new {
-    val scalatestplusV  = "5.0.0"
-    val scalaLoggingV   = "3.9.2"
-    val logbackV        = "1.2.3"
-    val slf4jV          = "1.7.26"
-    val typesafeConfigV = "1.3.2"
-    val scalajHttpV     = "2.4.2"
-    val zioV            = "1.0.0-RC18-2"
-    val scalatestV      = "3.0.5"
-    val gatlingV        = "3.3.1"
-
     // common dependencies
-    val logback        = "ch.qos.logback"             % "logback-classic" % logbackV
-    val scalaLogging   = "com.typesafe.scala-logging" %% "scala-logging"  % scalaLoggingV
-    val slf4j          = "org.slf4j"                  % "jcl-over-slf4j"  % slf4jV
-    val typesafeConfig = "com.typesafe"               % "config"          % typesafeConfigV
-    val zio            = "dev.zio"                    %% "zio"            % zioV
-    val zioStreams     = "dev.zio"                    %% "zio-streams"    % zioV
-    val zioTest        = "dev.zio"                    %% "zio-test"       % zioV
-    val zioTestSbt     = "dev.zio"                    %% "zio-test-sbt"   % zioV
-    val scalatest      = "org.scalatest"              %% "scalatest"      % scalatestV
+    val logback        = "ch.qos.logback"             % "logback-classic" % "1.2.3"
+    val scalaLogging   = "com.typesafe.scala-logging" %% "scala-logging"  % "3.9.2"
+    val slf4j          = "org.slf4j"                  % "jcl-over-slf4j"  % "1.7.26"
+    val typesafeConfig = "com.typesafe"               % "config"          % "1.3.2"
+    val zio            = "dev.zio"                    %% "zio"            % "1.0.0-RC18-2"
+    val zioStreams     = "dev.zio"                    %% "zio-streams"    % "1.0.0-RC18-2"
+    val zioTest        = "dev.zio"                    %% "zio-test"       % "1.0.0-RC18-2"
+    val zioTestSbt     = "dev.zio"                    %% "zio-test-sbt"   % "1.0.0-RC18-2"
+    val scalatest      = "org.scalatest"              %% "scalatest"      % "3.0.5"
 
     // project specific dependencies
-    val scalatestplus = "org.scalatestplus.play" %% "scalatestplus-play"       % scalatestplusV
-    val scalajHttp    = "org.scalaj"             %% "scalaj-http"              % scalajHttpV
-    val gatlingCharts = "io.gatling.highcharts"  % "gatling-charts-highcharts" % gatlingV
-    val gatlingTest   = "io.gatling"             % "gatling-test-framework"    % gatlingV
+    val scalatestplus = "org.scalatestplus.play" %% "scalatestplus-play"       % "5.0.0"
+    val scalajHttp    = "org.scalaj"             %% "scalaj-http"              % "2.4.2"
+    val gatlingCharts = "io.gatling.highcharts"  % "gatling-charts-highcharts" % "3.3.1"
+    val gatlingTest   = "io.gatling"             % "gatling-test-framework"    % "3.3.1"
   }
 
 lazy val commonDependencies = Seq(
@@ -93,7 +83,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val assemblySettings = Seq(
-  assemblyJarName in assembly := name.value + ".jar",
+  assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false),
   assemblyMergeStrategy in assembly := {
     case PathList("META-INF", xs @ _*) => MergeStrategy.discard
     case "application.conf"            => MergeStrategy.concat
