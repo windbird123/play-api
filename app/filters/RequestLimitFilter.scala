@@ -25,7 +25,7 @@ class RequestLimitFilter @Inject() (config: Configuration)(implicit ec: Executio
   val count = new AtomicInteger(0)
 
   override def apply(nextFilter: EssentialAction) = EssentialAction { implicit request =>
-    // marker logging 을 위해
+    // marker logging 을 위해, request 로 부터 암시적으로 MarkerContext 를 생성해 줌
     import libs.playzio._
 
     val tps     = config.get[Int]("service.tps")

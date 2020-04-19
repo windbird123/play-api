@@ -9,7 +9,7 @@ import zio.{Has, Layer, RIO, ZLayer}
 
 package object playzio {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // marker context logging, implicit RequestHeader 나 Has[MarkerContext] 가 있으면 MarkerContext 가 제공됨
+  // marker context logging: implicit RequestHeader 가 있으면 MarkerContext 가 제공됨
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   val serverStartId: String = UUID.randomUUID().toString.replace("-", "").substring(0, 8)
 
@@ -19,8 +19,6 @@ package object playzio {
 
   implicit def requestHeaderToMarkerContext(implicit request: RequestHeader): MarkerContext =
     MarkerFactory.getMarker(serverStartId + "-" + request.id)
-
-  implicit def envToMarkerContext(implicit env: Has[MarkerContext]): MarkerContext = env.get[MarkerContext]
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // for zio action
