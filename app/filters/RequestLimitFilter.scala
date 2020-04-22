@@ -42,6 +42,7 @@ class RequestLimitFilter @Inject() (config: Configuration)(implicit ec: Executio
         out
       }
     } else {
+      count.decrementAndGet()
       Accumulator.done(Future.successful(Results.Ok(s"count=$count")))
     }
   }

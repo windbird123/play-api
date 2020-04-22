@@ -3,6 +3,7 @@ package controllers
 import akka.actor.ActorSystem
 import javax.inject._
 import play.api.Logging
+import play.api.libs.json.{Json, OFormat}
 import play.api.mvc._
 import services.MyService
 
@@ -38,7 +39,12 @@ class AsyncController @Inject() (cc: ControllerComponents, actorSystem: ActorSys
     import zio._
     svc *> Task.effectTotal {
       logger.info("log in zio task")
-      "Hi222"
-    }.map(msg => Ok(msg))
+      MyResponse("kjm", 21)
+    }.map(msg => Ok(Json.toJson(msg)))
   }
+}
+
+case class MyResponse(name: String, age: Int)
+object MyResponse {
+  implicit val myResponseFormat: OFormat[MyResponse] = Json.format[MyResponse]
 }
