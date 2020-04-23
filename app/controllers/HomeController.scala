@@ -13,11 +13,7 @@ import scala.concurrent.{ ExecutionContext, Future }
  * application's home page.
  */
 @Singleton
-class HomeController @Inject() (
-  cc: ControllerComponents,
-  greeterServiceClient: GreeterServiceClient,
-  config: Configuration
-)(
+class HomeController @Inject() (cc: ControllerComponents, greeterServiceClient: GreeterServiceClient)(
   implicit assetsFinder: AssetsFinder,
   ec: ExecutionContext
 ) extends AbstractController(cc) {
