@@ -3,9 +3,9 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET        /home                controllers.HomeController.home
+GET        /home                controllers.HomeController.index
 
-GET        /                    controllers.HomeController.index
+GET        /                    controllers.GrpcController.index
 ->         /                    routers.HelloWorldRouter
 
 
