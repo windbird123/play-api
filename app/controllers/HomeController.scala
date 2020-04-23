@@ -1,19 +1,25 @@
 package controllers
 
-import com.github.windbird123.helloworld.grpc.{GreeterServiceClient, HelloReply, HelloRequest}
+import com.github.windbird123.helloworld.grpc.{ GreeterServiceClient, HelloReply, HelloRequest }
 import com.typesafe.config.Config
 import javax.inject._
+import play.api.Configuration
 import play.api.mvc._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class HomeController @Inject() (cc: ControllerComponents, greeterServiceClient: GreeterServiceClient, config: Config)(
-  implicit assetsFinder: AssetsFinder, ec: ExecutionContext
+class HomeController @Inject() (
+  cc: ControllerComponents,
+  greeterServiceClient: GreeterServiceClient,
+  config: Configuration
+)(
+  implicit assetsFinder: AssetsFinder,
+  ec: ExecutionContext
 ) extends AbstractController(cc) {
 
   /**
