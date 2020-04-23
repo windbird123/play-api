@@ -7,7 +7,6 @@ import play.api.mvc.InjectedController
 
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
 class GrpcController @Inject() (greeterServiceClient: GreeterServiceClient, config: Configuration)(
   implicit ec: ExecutionContext
 ) extends InjectedController {
