@@ -1,7 +1,6 @@
 package libs
 
 import java.util.UUID
-
 import org.slf4j.MarkerFactory
 import play.api.MarkerContext
 import play.api.mvc._

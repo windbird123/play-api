@@ -23,12 +23,13 @@ class RequestLimitFilter @Inject() (config: Configuration)(implicit ec: Executio
     extends EssentialFilter
     with Logging {
   val count = new AtomicInteger(0)
+  val tps   = config.get[Int]("service.tps")
 
+  // Filter 에서도 제한할 수 있지만 action.AroundAction 처럼 action composition 을 통해 제한할 수도 있다.
   override def apply(nextFilter: EssentialAction) = EssentialAction { implicit request =>
     // marker logging 을 위해, request 로 부터 암시적으로 MarkerContext 를 생성해 줌
     import libs.playzio._
 
-    val tps     = config.get[Int]("service.tps")
     val inCount = count.incrementAndGet()
     logger.info(s"Before Filter: $inCount,  tps=$tps")
 

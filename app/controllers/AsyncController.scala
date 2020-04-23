@@ -42,6 +42,9 @@ class AsyncController @Inject() (cc: ControllerComponents, actorSystem: ActorSys
       MyResponse("kjm", 21)
     }.map(msg => Ok(Json.toJson(msg)))
   }
+
+  // action composition !!!
+  def message2 = action.AroundAction(message)
 }
 
 case class MyResponse(name: String, age: Int)
