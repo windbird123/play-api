@@ -98,6 +98,7 @@ lazy val compilerOptions = Seq(
 
 lazy val commonSettings = Seq(
   scalacOptions := compilerOptions,
+  doc in Compile := (target.value / "none"),
   resolvers ++= Seq(
     "Local Maven Repository" at "file://" + Path.userHome.absolutePath + "/.m2/repository",
     Resolver.sonatypeRepo("releases"),
