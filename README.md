@@ -7,9 +7,9 @@ master, rest 두개의 branch 가 있다.
   * 참고: https://developer.lightbend.com/guides/play-scala-grpc-example/locally.html
   * dev mode (IDE 에서)
     ```bash
-    sbt run -Dhttp.port=9000 Dhttps.port=9443
+    sbt run
     ```
-    dev mode 에서는 application.conf 에 지정된 http.port 값을 인식을 못하는 듯
+    dev mode 에서는 application.conf 에 지정된 http.port 값을 인식을 못하는 듯 해서 build.sbt 의 PlayKeys.devSettings 에 설정
     https://stackoverflow.com/a/40119695
     
   * prod mode (linux 장비에서)

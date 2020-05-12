@@ -17,7 +17,7 @@ lazy val `play-api` = project
     akkaGrpcExtraGenerators += PlayScalaClientCodeGenerator,
     akkaGrpcExtraGenerators += PlayScalaServerCodeGenerator,
     PlayKeys.devSettings ++= Seq(
-      "play.server.http.port"  -> "disabled",
+      "play.server.http.port"  -> "9000",
       "play.server.https.port" -> "9443",
       // Configures the keystore to use in Dev mode. This setting is equivalent to `play.server.https.keyStore.path`
       // in `application.conf`.
