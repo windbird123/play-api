@@ -5,7 +5,14 @@ master, rest 두개의 branch 가 있다.
 * 기능: Grpc + Rest
 * 실행  
   * 참고: https://developer.lightbend.com/guides/play-scala-grpc-example/locally.html
-  * production mode (linux 장비에서..)
+  * dev mode (IDE 에서)
+    ```bash
+    sbt run -Dhttp.port=9000 Dhttps.port=9443
+    ```
+    dev mode 에서는 application.conf 에 지정된 http.port 값을 인식을 못하는 듯
+    https://stackoverflow.com/a/40119695
+    
+  * prod mode (linux 장비에서)
     ```bash
     sbt runProd
     ```
