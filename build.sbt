@@ -55,10 +55,10 @@ lazy val dependencies =
     val scalaLogging   = "com.typesafe.scala-logging" %% "scala-logging"  % "3.9.2"
     val slf4j          = "org.slf4j"                  % "jcl-over-slf4j"  % "1.7.26"
     val typesafeConfig = "com.typesafe"               % "config"          % "1.3.2"
-    val zio            = "dev.zio"                    %% "zio"            % "1.0.0-RC18-2"
-    val zioStreams     = "dev.zio"                    %% "zio-streams"    % "1.0.0-RC18-2"
-    val zioTest        = "dev.zio"                    %% "zio-test"       % "1.0.0-RC18-2"
-    val zioTestSbt     = "dev.zio"                    %% "zio-test-sbt"   % "1.0.0-RC18-2"
+    val zio            = "dev.zio"                    %% "zio"            % "1.0.0-RC20"
+    val zioStreams     = "dev.zio"                    %% "zio-streams"    % "1.0.0-RC20"
+    val zioTest        = "dev.zio"                    %% "zio-test"       % "1.0.0-RC20"
+    val zioTestSbt     = "dev.zio"                    %% "zio-test-sbt"   % "1.0.0-RC20"
     val scalatest      = "org.scalatest"              %% "scalatest"      % "3.0.5"
 
     // project specific dependencies
