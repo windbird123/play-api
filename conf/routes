@@ -16,5 +16,7 @@ GET        /message             controllers.AsyncController.message
 
 GET        /message2            controllers.AsyncController.message2
 
+GET         /hello_actor/:name        controllers.ActorController.myHello(name: String)
+
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file        controllers.Assets.versioned(file)

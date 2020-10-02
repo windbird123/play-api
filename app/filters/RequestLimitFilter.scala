@@ -34,7 +34,7 @@ class RequestLimitFilter @Inject() (config: Configuration)(implicit ec: Executio
     logger.info(s"Before Filter: $inCount,  tps=$tps")
 
     if (inCount < tps) {
-      nextFilter(request).recover { case NonFatal(e) => Results.Ok(s"count=$count") }.map { result =>
+      nextFilter(request).recover { case NonFatal(e) => Results.Ok(s"failed to handle request in RequestLimitFilter") }.map { result =>
         val out = result.withHeaders("X-ExampleFilter" -> "foo")
 
         val outCount = count.decrementAndGet()
@@ -43,8 +43,8 @@ class RequestLimitFilter @Inject() (config: Configuration)(implicit ec: Executio
         out
       }
     } else {
-      count.decrementAndGet()
-      Accumulator.done(Future.successful(Results.Ok(s"count=$count")))
+      val afterCount = count.decrementAndGet()
+      Accumulator.done(Future.successful(Results.Ok(s"afterCount=$afterCount")))
     }
   }
 }
