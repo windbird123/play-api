@@ -1,12 +1,14 @@
 package libs
 
-import java.util.UUID
 import org.slf4j.MarkerFactory
 import play.api.MarkerContext
+import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc._
-import zio.{Has, Layer, RIO, Task, ZLayer}
+import zio.Task
 
-package object playzio {
+import java.util.UUID
+
+object application {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // marker context logging: implicit RequestHeader 가 있으면 MarkerContext 가 제공됨
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,24 +22,24 @@ package object playzio {
     MarkerFactory.getMarker(serverStartId + "-" + request.id)
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // json converter
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  implicit class ToJson[T: Writes](x: T) {
+    def toJson: JsValue = Json.toJson[T](x)
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // for zio action
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   implicit class ActionBuilderOps[+R[_], B](actionBuilder: ActionBuilder[R, B]) {
-    def z(zioAction: R[B] => Task[Result]): Action[B] = actionBuilder.async { request =>
-//      val mcLayer: Layer[Nothing, Has[MarkerContext]] =
-//        ZLayer.succeed(request.asInstanceOf[RequestHeader].toMarkerContext)
-
-      val task = zioAction(request)
+    def task(f: R[B] => Task[Result]): Action[B] = actionBuilder.async { request =>
+      val task = f(request)
       zio.Runtime.default.unsafeRunToFuture(task)
     }
 
-    def z[A](bp: BodyParser[A])(zioAction: R[A] => Task[Result]): Action[A] =
-      actionBuilder(bp).async { request =>
-//        val mcLayer: Layer[Nothing, Has[MarkerContext]] =
-//          ZLayer.succeed(request.asInstanceOf[RequestHeader].toMarkerContext)
-
-        val task = zioAction(request)
-        zio.Runtime.default.unsafeRunToFuture(task)
-      }
+    def task[A](bp: BodyParser[A])(f: R[A] => Task[Result]): Action[A] = actionBuilder(bp).async { request =>
+      val task = f(request)
+      zio.Runtime.default.unsafeRunToFuture(task)
+    }
   }
 }

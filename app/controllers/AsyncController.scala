@@ -30,9 +30,9 @@ class AsyncController @Inject() (cc: ControllerComponents, actorSystem: ActorSys
 ) extends AbstractController(cc)
     with Logging {
 
-  import libs.playzio._
+  import libs.application._
   // implicit request 로 해야 libs.playzio.requestHeaderToMarkerContext 가 적용되어 log 에 UUID 가 기록된다.
-  def message = Action.z { implicit request =>
+  def message = Action.task { implicit request =>
     logger.info("TEST logging with marker")
     val svc = myService.print()
 
