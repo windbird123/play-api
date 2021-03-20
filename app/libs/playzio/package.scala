@@ -4,7 +4,7 @@ import java.util.UUID
 import org.slf4j.MarkerFactory
 import play.api.MarkerContext
 import play.api.mvc._
-import zio.{Has, Layer, RIO, ZLayer}
+import zio.{Has, Layer, RIO, Task, ZLayer}
 
 package object playzio {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,20 +23,20 @@ package object playzio {
   // for zio action
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   implicit class ActionBuilderOps[+R[_], B](actionBuilder: ActionBuilder[R, B]) {
-    def z(zioAction: R[B] => RIO[Has[MarkerContext], Result]): Action[B] = actionBuilder.async { request =>
-      val mcLayer: Layer[Nothing, Has[MarkerContext]] =
-        ZLayer.succeed(request.asInstanceOf[RequestHeader].toMarkerContext)
+    def z(zioAction: R[B] => Task[Result]): Action[B] = actionBuilder.async { request =>
+//      val mcLayer: Layer[Nothing, Has[MarkerContext]] =
+//        ZLayer.succeed(request.asInstanceOf[RequestHeader].toMarkerContext)
 
-      val task = zioAction(request).provideLayer(mcLayer)
+      val task = zioAction(request)
       zio.Runtime.default.unsafeRunToFuture(task)
     }
 
-    def z[A](bp: BodyParser[A])(zioAction: R[A] => RIO[Has[MarkerContext], Result]): Action[A] =
+    def z[A](bp: BodyParser[A])(zioAction: R[A] => Task[Result]): Action[A] =
       actionBuilder(bp).async { request =>
-        val mcLayer: Layer[Nothing, Has[MarkerContext]] =
-          ZLayer.succeed(request.asInstanceOf[RequestHeader].toMarkerContext)
+//        val mcLayer: Layer[Nothing, Has[MarkerContext]] =
+//          ZLayer.succeed(request.asInstanceOf[RequestHeader].toMarkerContext)
 
-        val task = zioAction(request).provideLayer(mcLayer)
+        val task = zioAction(request)
         zio.Runtime.default.unsafeRunToFuture(task)
       }
   }
