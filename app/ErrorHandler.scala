@@ -1,5 +1,5 @@
 import javax.inject.{Inject, Provider, Singleton}
-import libs.application._
+import common.application._
 import play.api._
 import play.api.http.DefaultHttpErrorHandler
 import play.api.http.Status._

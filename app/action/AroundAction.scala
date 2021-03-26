@@ -14,7 +14,7 @@ object AroundAction {
 case class AroundAction[A](action: Action[A]) extends Action[A] with Logging {
   def apply(request: Request[A]): Future[Result] = {
     // for marker logging
-    import libs.application._
+    import common.application._
     implicit val r: Request[A] = request
 
     logger.info(s"Counting: ${AroundAction.counter.incrementAndGet()}")

@@ -1,4 +1,4 @@
-package libs
+package common
 
 import org.slf4j.MarkerFactory
 import play.api.MarkerContext
