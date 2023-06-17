@@ -24,12 +24,12 @@ class BookRepository @Inject() ()(implicit ec: BlockingExecutionContext) {
   )
 
   def getBooks()(implicit mc: MarkerContext): Future[Either[Unit, Seq[Book]]] = Future {
-    logger.info("get all books")
+    logger.info("BookRepository: get all books")
     books.get().asRight
   }
 
   def addBook(book: Book)(implicit mc: MarkerContext): Future[Either[Unit, Unit]] = Future {
-    logger.info(s"add a book, ${book.title}")
+    logger.info(s"BookRepository: add a book, ${book.title}")
     Right(books.getAndUpdate(books => books :+ book))
   }
 }

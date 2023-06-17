@@ -1,7 +1,7 @@
 package routers
 
-import controllers.SecureController
 import models.{AuthError, AuthenticatedContext}
+import services.SecureService
 import sttp.model.StatusCode
 import sttp.tapir._
 import sttp.tapir.generic.auto._
@@ -12,7 +12,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton
-class SecuredEndpoints @Inject() (secureController: SecureController) {
+class SecuredEndpoints @Inject() (secureController: SecureService) {
   private val securedWithBearerEndpoint: Endpoint[String, Unit, AuthError, Unit, Any] = endpoint
     .securityIn(auth.bearer[String]())
     .errorOut(statusCode(StatusCode.Unauthorized))
