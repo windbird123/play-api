@@ -11,10 +11,11 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class BookController @Inject() (bookRepository: BookRepository)(implicit mat: Materializer, ec: ExecutionContext) {
   def listBooks(): Future[Either[Unit, Seq[Book]]] = {
-    Future.successful(bookRepository.getBooks())
+    bookRepository.getBooks()
   }
 
   def addBook(book: Book): Future[Either[AuthError, Unit]] = {
-    Future.successful(bookRepository.addBook(book).leftMap(_ => AuthError("auth error")))
+    val added: Future[Either[Unit, Unit]] = bookRepository.addBook(book)
+    added.map(_.leftMap(_ => AuthError("auth error")))
   }
 }

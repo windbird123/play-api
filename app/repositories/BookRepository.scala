@@ -1,12 +1,17 @@
 package repositories
+import bases.BlockingExecutionContext
 import cats.syntax.all._
 import models.{Author, Book}
+import play.api.{Logger, MarkerContext}
 
 import java.util.concurrent.atomic.AtomicReference
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.Future
 
 @Singleton
-class BookRepository {
+class BookRepository @Inject() ()(implicit ec: BlockingExecutionContext) {
+  private val logger = Logger(getClass)
+
   private val books: AtomicReference[Seq[Book]] = new AtomicReference(
     Seq(
       Book("The Sorrows of Young Werther", 1774, Author("Johann Wolfgang von Goethe")),
@@ -18,7 +23,13 @@ class BookRepository {
     )
   )
 
-  def getBooks(): Either[Unit, Seq[Book]] = books.get().asRight
+  def getBooks()(implicit mc: MarkerContext): Future[Either[Unit, Seq[Book]]] = Future {
+    logger.info("get all books")
+    books.get().asRight
+  }
 
-  def addBook(book: Book): Either[Unit, Unit] = Right(books.getAndUpdate(books => books :+ book))
+  def addBook(book: Book)(implicit mc: MarkerContext): Future[Either[Unit, Unit]] = Future {
+    logger.info(s"add a book, ${book.title}")
+    Right(books.getAndUpdate(books => books :+ book))
+  }
 }

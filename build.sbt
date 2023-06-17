@@ -15,7 +15,6 @@ val tapirVersion = "1.5.5"
 
 libraryDependencies ++= Seq(
   guice,
-  "org.typelevel" %% "cats-core" % "2.9.0",
   "com.softwaremill.sttp.tapir" %% "tapir-core" % tapirVersion,
   "com.softwaremill.sttp.tapir" %% "tapir-play-server" % tapirVersion,
   "com.softwaremill.sttp.tapir" %% "tapir-json-play" % tapirVersion,
@@ -23,5 +22,8 @@ libraryDependencies ++= Seq(
   "com.softwaremill.sttp.apispec" %% "openapi-circe-yaml" % "0.4.0",
   "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui" % tapirVersion,
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test,
-  "com.softwaremill.sttp.shared" %% "akka" % "1.3.15"
+  "com.softwaremill.sttp.shared" %% "akka" % "1.3.15",
+  "org.typelevel" %% "cats-core" % "2.9.0",
+  "net.logstash.logback" % "logstash-logback-encoder" % "6.2",
+  "com.klibisz.futil" %% "futil" % "0.1.2"
 )
