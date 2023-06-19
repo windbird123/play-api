@@ -7,8 +7,9 @@
 ## 특징
 * OpenAPI docs: http://localhost:9000/docs
 * [tapir](https://tapir.softwaremill.com/en/latest/index.html) 사용
-* Marker context id (correlation id) logging
-* adds blocking threads pool
+* [Marker context logging](https://www.playframework.com/documentation/2.8.x/ScalaLogging#Using-Markers-and-Marker-Contexts)
+* [adds blocking threads pool](https://www.playframework.com/documentation/2.8.x/ThreadPools)
+* [cache](https://www.playframework.com/documentation/2.8.x/ScalaCache)
 
 ## 참고
 * streaming 이 필요할 경우 [여기](https://github.com/gaeljw/tapir-play-sample/blob/master/app/routers/BookController.scala#L21) 처럼 akka-stream 을 이용할 수 있다.

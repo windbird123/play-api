@@ -15,6 +15,7 @@ val tapirVersion = "1.5.5"
 
 libraryDependencies ++= Seq(
   guice,
+  caffeine,
   "com.softwaremill.sttp.tapir" %% "tapir-core" % tapirVersion,
   "com.softwaremill.sttp.tapir" %% "tapir-play-server" % tapirVersion,
   "com.softwaremill.sttp.tapir" %% "tapir-json-play" % tapirVersion,
