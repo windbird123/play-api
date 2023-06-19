@@ -22,10 +22,11 @@ class BookEndpoints @Inject() (securedEndpoints: SecuredEndpoints) {
       .tag("Books API")
       .in("books")
 
-  val booksListingEndpoint: PublicEndpoint[Unit, Unit, Seq[Book], Any] =
+  val booksListingEndpoint: PublicEndpoint[(Int, Option[Int]), Unit, Seq[Book], Any] =
     baseBookEndpoint.get
       .summary("List all books")
       .in("list" / "all")
+      .in(query[Int]("start") and query[Option[Int]]("limit"))
       .out(jsonBody[Seq[Book]])
 
   val addBookEndpoint: PartialServerEndpoint[String, AuthenticatedContext, Book, AuthError, Unit, Any, Future] =

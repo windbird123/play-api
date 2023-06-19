@@ -5,8 +5,9 @@
 * https://github.com/playframework/play-samples/tree/2.8.x/play-scala-rest-api-example
 
 ## 특징
+* OpenAPI docs: http://localhost:9000/docs
 * [tapir](https://tapir.softwaremill.com/en/latest/index.html) 사용
-* Marker context id logging (MDC)
+* Marker context id (correlation id) logging
 * adds blocking threads pool
 
 ## 참고

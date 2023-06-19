@@ -25,7 +25,7 @@ class ApiRouter @Inject() (
     ec: ExecutionContext
 ) extends SimpleRouter {
   private val logger = Logger(getClass)
-  private val playServerOptions: PlayServerOptions = PlayServerOptions.default(mat, ec)
+  private val playServerOptions: PlayServerOptions = PlayServerOptions.customiseInterceptors.options
   private val interpreter = PlayServerInterpreter(playServerOptions)
 
   private val openApiRoute: Routes = {
@@ -38,9 +38,10 @@ class ApiRouter @Inject() (
 
   private val booksListingRoute: Routes = interpreter.toRoutes(
     bookEndpoints.booksListingEndpoint
-      .serverLogic { _ =>
+      .serverLogic { case (start, limit) =>
         implicit val mc: MarkerContext = RequestMarkerContext.newMarkerContext
 
+        println(s"start=[$start], limit=[$limit]")
         bookController.listBooks()
       }
   )
