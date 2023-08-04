@@ -30,7 +30,7 @@ class ApiRouter @Inject() (
 
   private val openApiRoute: Routes = {
     val openApiDocs: OpenAPI = OpenAPIDocsInterpreter().toOpenAPI(
-      List(bookEndpoints.booksListingEndpoint, bookEndpoints.addBookEndpoint.endpoint),
+      List(bookEndpoints.booksListingEndpoint, bookEndpoints.getBookEndpoint, bookEndpoints.addBookEndpoint.endpoint),
       Info("Tapir Play API", "1.0.0")
     )
     interpreter.toRoutes(SwaggerUI[Future](openApiDocs.toYaml))
@@ -43,6 +43,16 @@ class ApiRouter @Inject() (
 
         println(s"start=[$start], limit=[$limit]")
         bookController.listBooks()
+      }
+  )
+
+  private val getBookRoute: Routes = interpreter.toRoutes(
+    bookEndpoints.getBookEndpoint
+      .serverLogicRecoverErrors { title: String =>
+        implicit val mc: MarkerContext = RequestMarkerContext.newMarkerContext
+
+        logger.info(s"ApiRouter: getBookRoute, title=$title")
+        bookController.getBook(title)
       }
   )
 
@@ -61,5 +71,6 @@ class ApiRouter @Inject() (
   // Routes are partial functions
   override def routes: Routes = openApiRoute
     .orElse(booksListingRoute)
+    .orElse(getBookRoute)
     .orElse(addBookRoute)
 }

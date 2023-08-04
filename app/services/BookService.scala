@@ -2,7 +2,7 @@ package services
 
 import akka.stream.Materializer
 import cats.syntax.all._
-import models.{AuthError, Book}
+import models.{AuthError, Book, MyError}
 import play.api.cache.AsyncCacheApi
 import play.api.{Logger, MarkerContext}
 import repositories.BookRepository
@@ -18,12 +18,19 @@ class BookService @Inject() (bookRepository: BookRepository, cache: AsyncCacheAp
 ) {
   private val logger = Logger(getClass)
 
-  def listBooks()(implicit mc: MarkerContext): Future[Either[Unit, Seq[Book]]] = {
+  // Future[Either[E,A]] 보다는 아래의 getBook() 처럼 Future[A] 가 심플한 듯?
+  def listBooks()(implicit mc: MarkerContext): Future[Either[MyError, Seq[Book]]] = {
     logger.info("SERVICE: listBooks()")
 
     cache.getOrElseUpdate("all_list", expiration = 1.minute) {
       bookRepository.getBooks()
     }
+//    Future.successful(MyError("KK").asLeft[Seq[Book]])
+  }
+
+  def getBook(title: String)(implicit mc: MarkerContext): Future[Book] = {
+    logger.info("SERVICE: getBook()")
+    bookRepository.getBook(title)
   }
 
   def addBook(book: Book)(implicit mc: MarkerContext): Future[Either[AuthError, Unit]] = {

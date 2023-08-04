@@ -9,6 +9,7 @@ import sttp.tapir.server.PartialServerEndpoint
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
+import models.MyError
 
 @Singleton
 class BookEndpoints @Inject() (securedEndpoints: SecuredEndpoints) {
@@ -22,12 +23,29 @@ class BookEndpoints @Inject() (securedEndpoints: SecuredEndpoints) {
       .tag("Books API")
       .in("books")
 
-  val booksListingEndpoint: PublicEndpoint[(Int, Option[Int]), Unit, Seq[Book], Any] =
+  val booksListingEndpoint: PublicEndpoint[(Int, Option[Int]), MyError, Seq[Book], Any] =
     baseBookEndpoint.get
       .summary("List all books")
       .in("list" / "all")
       .in(query[Int]("start") and query[Option[Int]]("limit"))
+      .errorOut(
+        oneOf[MyError](
+          oneOfVariant[MyError](statusCode(StatusCode.BadRequest).and(jsonBody[MyError]))
+        )
+      )
       .out(jsonBody[Seq[Book]])
+
+  val getBookEndpoint: PublicEndpoint[String, MyError, Book, Any] =
+    baseBookEndpoint.get
+      .summary("Get specific book")
+      .in("get")
+      .in(query[String]("title"))
+      .errorOut(
+        oneOf[MyError](
+          oneOfVariant(statusCode(StatusCode.NotFound).and(jsonBody[MyError].description("book not found")))
+        )
+      )
+      .out(jsonBody[Book])
 
   val addBookEndpoint: PartialServerEndpoint[String, AuthenticatedContext, Book, AuthError, Unit, Any, Future] =
     baseSecuredBookEndpoint.post

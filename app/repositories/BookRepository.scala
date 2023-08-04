@@ -1,7 +1,7 @@
 package repositories
 import bases.BlockingExecutionContext
 import cats.syntax.all._
-import models.{Author, Book}
+import models.{Author, Book, MyError}
 import play.api.{Logger, MarkerContext}
 
 import java.util.concurrent.atomic.AtomicReference
@@ -23,9 +23,17 @@ class BookRepository @Inject() ()(implicit ec: BlockingExecutionContext) {
     )
   )
 
-  def getBooks()(implicit mc: MarkerContext): Future[Either[Unit, Seq[Book]]] = Future {
+  def getBooks()(implicit mc: MarkerContext): Future[Either[MyError, Seq[Book]]] = Future {
     logger.info("BookRepository: get all books")
     books.get().asRight
+  }
+
+  def getBook(title: String)(implicit mc: MarkerContext): Future[Book] = Future {
+    logger.info("BookRepository: get book")
+    books.get().find(_.title == title) match {
+      case Some(book) => book
+      case None       => throw MyError(s"Book not found, title=$title")
+    }
   }
 
   def addBook(book: Book)(implicit mc: MarkerContext): Future[Either[Unit, Unit]] = Future {
