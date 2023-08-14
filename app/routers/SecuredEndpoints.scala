@@ -12,13 +12,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton
-class SecuredEndpoints @Inject() (secureController: SecureService) {
+class SecuredEndpoints @Inject() (secureService: SecureService) {
   private val securedWithBearerEndpoint: Endpoint[String, Unit, AuthError, Unit, Any] = endpoint
     .securityIn(auth.bearer[String]())
-    .errorOut(statusCode(StatusCode.Unauthorized))
-    .errorOut(jsonBody[AuthError])
+    .errorOut(statusCode(StatusCode.Unauthorized).and(jsonBody[AuthError].description("auth error")))
 
   val securedWithBearer: PartialServerEndpoint[String, AuthenticatedContext, Unit, AuthError, Unit, Any, Future] =
     securedWithBearerEndpoint
-      .serverSecurityLogic(secureController.authenticateToken)
+      .serverSecurityLogic(secureService.authenticateToken)
 }

@@ -6,7 +6,7 @@ import models.{AuthenticatedContext, Book}
 import play.api.routing.Router.Routes
 import play.api.routing.SimpleRouter
 import play.api.{Logger, MarkerContext}
-import services.BookService
+import services.{BookService, EchoService}
 import sttp.apispec.openapi.circe.yaml._
 import sttp.apispec.openapi.{Info, OpenAPI}
 import sttp.tapir.docs.openapi._
@@ -19,7 +19,9 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ApiRouter @Inject() (
     bookEndpoints: BookEndpoints,
-    bookController: BookService
+    bookService: BookService,
+    echoEndpoints: EchoEndpoints,
+    echoService: EchoService
 )(implicit
     val mat: Materializer,
     ec: ExecutionContext
@@ -30,7 +32,12 @@ class ApiRouter @Inject() (
 
   private val openApiRoute: Routes = {
     val openApiDocs: OpenAPI = OpenAPIDocsInterpreter().toOpenAPI(
-      List(bookEndpoints.booksListingEndpoint, bookEndpoints.getBookEndpoint, bookEndpoints.addBookEndpoint.endpoint),
+      List(
+        bookEndpoints.booksListingEndpoint,
+        bookEndpoints.getBookEndpoint,
+        bookEndpoints.addBookEndpoint.endpoint,
+        echoEndpoints.echoEndpoint
+      ),
       Info("Tapir Play API", "1.0.0")
     )
     interpreter.toRoutes(SwaggerUI[Future](openApiDocs.toYaml))
@@ -42,7 +49,7 @@ class ApiRouter @Inject() (
         implicit val mc: MarkerContext = RequestMarkerContext.newMarkerContext
 
         println(s"start=[$start], limit=[$limit]")
-        bookController.listBooks()
+        bookService.listBooks()
       }
   )
 
@@ -52,7 +59,7 @@ class ApiRouter @Inject() (
         implicit val mc: MarkerContext = RequestMarkerContext.newMarkerContext
 
         logger.info(s"ApiRouter: getBookRoute, title=$title")
-        bookController.getBook(title)
+        bookService.getBook(title)
       }
   )
 
@@ -63,9 +70,18 @@ class ApiRouter @Inject() (
           implicit val mc: MarkerContext = RequestMarkerContext.newMarkerContext
 
           logger.info(s"ApiRouter: Authenticated with userId=${authenticatedContext.userId}")
-          bookController.addBook(book)
+          bookService.addBook(book)
         }
       }
+  )
+
+  private val echoRoute: Routes = interpreter.toRoutes(
+    echoEndpoints.echoEndpoint.serverLogicRecoverErrors { message: String =>
+      implicit val mc: MarkerContext = RequestMarkerContext.newMarkerContext
+
+      logger.info(s"ApiRouter: echoRoute, message=$message")
+      echoService.echo(message)
+    }
   )
 
   // Routes are partial functions
@@ -73,4 +89,5 @@ class ApiRouter @Inject() (
     .orElse(booksListingRoute)
     .orElse(getBookRoute)
     .orElse(addBookRoute)
+    .orElse(echoRoute)
 }
