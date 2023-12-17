@@ -3,7 +3,7 @@
 아래 2개의 repository 를 참고해 playframework rest api 를 작성함
 
 * https://github.com/gaeljw/tapir-play-sample
-* https://github.com/playframework/play-samples/tree/2.8.x/play-scala-rest-api-example
+* https://github.com/playframework/play-samples/tree/3.0.x/play-scala-rest-api-example
 
 ## 실행
 
@@ -22,9 +22,9 @@
 
 * OpenAPI docs: http://localhost:9000/docs
 * [tapir](https://tapir.softwaremill.com/en/latest/index.html) 사용
-* [Marker context logging](https://www.playframework.com/documentation/2.8.x/ScalaLogging#Using-Markers-and-Marker-Contexts)
-* [adds blocking threads pool](https://www.playframework.com/documentation/2.8.x/ThreadPools)
-* [cache](https://www.playframework.com/documentation/2.8.x/ScalaCache)
+* [Marker context logging](https://www.playframework.com/documentation/3.0.x/ScalaLogging#Using-Markers-and-Marker-Contexts)
+* [adds blocking threads pool](https://www.playframework.com/documentation/3.0.x/ThreadPools)
+* [cache](https://www.playframework.com/documentation/3.0.x/ScalaCache)
 
 ## 참고
 
