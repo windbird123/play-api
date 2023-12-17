@@ -1,8 +1,8 @@
 package routers
 
-import akka.stream.Materializer
 import bases.RequestMarkerContext
 import models.{AuthenticatedContext, Book}
+import org.apache.pekko.stream.Materializer
 import play.api.routing.Router.Routes
 import play.api.routing.SimpleRouter
 import play.api.{Logger, MarkerContext}
@@ -27,7 +27,7 @@ class ApiRouter @Inject() (
     ec: ExecutionContext
 ) extends SimpleRouter {
   private val logger = Logger(getClass)
-  private val playServerOptions: PlayServerOptions = PlayServerOptions.customiseInterceptors.options
+  private val playServerOptions: PlayServerOptions = PlayServerOptions.default(mat, ec)
   private val interpreter = PlayServerInterpreter(playServerOptions)
 
   private val openApiRoute: Routes = {

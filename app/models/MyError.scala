@@ -1,9 +1,9 @@
 package models
 
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json.{Format, Json}
 
 case class MyError(msg: String) extends Exception
 
 object MyError {
-  implicit val format = Json.format[MyError]
+  implicit val format: Format[MyError] = Json.format[MyError]
 }

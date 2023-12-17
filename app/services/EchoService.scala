@@ -1,6 +1,6 @@
 package services
 
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import play.api.{Logger, MarkerContext}
 
 import javax.inject._
