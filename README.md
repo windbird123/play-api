@@ -18,6 +18,15 @@
   http://localhost:9000/docs/
   ```
 
+## 주의 사항
+`windows` 에서 실행시 아래와 같이 에러가 발생할 수 있다.
+```shell
+[error] java.lang.UnsupportedOperationException
+[error]         at java.base/java.nio.file.Files.setPosixFilePermissions(Files.java:2166)
+```
+
+이 경우 windows `WSL` 에서 `sbt stage` 실행해 필요한 디렉토리를 만든다.
+
 ## 특징
 
 * OpenAPI docs: http://localhost:9000/docs

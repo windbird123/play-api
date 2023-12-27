@@ -7,11 +7,9 @@ lazy val root = (project in file("."))
     publishArtifact := false
   )
 
-publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
-
 scalaVersion := "2.13.12"
 
-val tapirVersion = "1.9.5"
+val tapirVersion = "1.9.6"
 val jacksonVersion = "2.16.0"
 
 libraryDependencies ++= Seq(
